@@ -12,7 +12,7 @@ namespace Buhler.IoT.e2e
         {
             IWebElement webElement = null;
 
-            webDriverWait.Until(condition =>
+            webDriverWait.Until(d =>
             {
                 try
                 {
@@ -30,6 +30,42 @@ namespace Buhler.IoT.e2e
             });
 
             return webElement;
+        }
+
+        public static IWebElement WaitUntilEnabled(this WebDriverWait webDriverWait, Func<IWebElement> getWebElement)
+        {
+            IWebElement webElement = null;
+
+            webDriverWait.Until(d =>
+            {
+                try
+                {
+                    webElement = getWebElement();
+                    return webElement.Displayed && webElement.Enabled;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+                catch (NoSuchElementException)
+                {
+                    return false;
+                }
+            });
+
+            return webElement;
+        }
+
+        public static void WaitForModal(this WebDriverWait webDriverWait)
+        {
+            webDriverWait.Until(d =>
+            {
+                if (d.FindElements(By.ClassName("modal-overlay")).Count == 0)
+                {
+                    return true;
+                }
+                return false;
+            });
         }
 
         public static ReadOnlyCollection<IWebElement> WaitUntilFirstDisplayed(this WebDriverWait webDriverWait, Func<ReadOnlyCollection<IWebElement>> getWebElements)
