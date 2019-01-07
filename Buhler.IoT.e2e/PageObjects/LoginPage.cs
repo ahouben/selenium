@@ -3,7 +3,7 @@ using OpenQA.Selenium.Support.UI;
 
 namespace Buhler.IoT.e2e.PageObjects
 {
-    public class LoginPage : BasePage
+    public class LoginPage : BasePageObject
     {    
         public LoginPage(IWebDriver driver, WebDriverWait wait) : base (driver, wait)
         {

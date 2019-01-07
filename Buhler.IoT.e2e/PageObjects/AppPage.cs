@@ -1,13 +1,12 @@
-﻿using Buhler.IoT.e2e.Extensions;
+﻿using Buhler.IoT.e2e.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Collections.ObjectModel;
-using System.Threading;
 
 namespace Buhler.IoT.e2e.PageObjects
 {
 
-    public class AppPage : BasePage
+    public class AppPage : BasePageObject
     {
         public AppPage(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
         {
@@ -25,7 +24,7 @@ namespace Buhler.IoT.e2e.PageObjects
         {
             get
             {
-                return wait.WaitUntilDisplayed(() => driver.FindElement(By.XPath("//*[contains(@class, 'sidenav-container')]/*[@class='expander']")));
+                return WaitUntilDisplayed(By.XPath("//*[contains(@class, 'sidenav-container')]/*[@class='expander']"));
             }
         }
 
@@ -51,62 +50,24 @@ namespace Buhler.IoT.e2e.PageObjects
             logout.Click();
         }
 
-        public void CreateDashboard(string name)
+        public Dashboard CreateDashboard(string name)
         {
-            ExpandSidenav();
-
-            var dashboardbutton = wait.WaitUntilDisplayed(() => driver.FindElement(ByExtensions.TextInsideDiv("Dashboard")));
+            var dashboardbutton = WaitUntilDisplayed(ElementFinder.ByTextInsideDiv("Dashboard"));
             dashboardbutton.Click();
 
-            var addNewPanelButton = wait.WaitUntilDisplayed(() => driver.FindElement(By.Id("addNewPanelButton")));
+            var addNewPanelButton = WaitUntilDisplayed(By.Id("addNewPanelButton"));
             addNewPanelButton.Click();
 
-            var nameInput = wait.WaitUntilDisplayed(() => driver.FindElement(By.Id("name")));
+            var nameInput = WaitUntilDisplayed(By.Id("name"));
             nameInput.Clear();
             nameInput.SendKeys(name);
 
-            var submitButton = wait.WaitUntilDisplayed(() => driver.FindElement(By.XPath("//button[@type='submit']")));
+            var submitButton = WaitUntilDisplayed(By.XPath("//button[@type='submit']"));
             submitButton.Click();
 
-            wait.WaitForModal();          
-        }
+            wait.WaitForModal();
 
-        public void AddCalculationWidgetWithFriendlyName(string widgetName, string friendlyName)
-        {
-            var editDashboardButton = wait.WaitUntilDisplayed(() => driver.FindElement(By.XPath("//a[@title='Edit Dashboard']")));
-            editDashboardButton.Click();
-
-            var addWidgetButton = wait.WaitUntilDisplayed(() => driver.FindElement(By.XPath("//a[@title='Add widget']")));
-            addWidgetButton.Click();
-
-            var calculationCheckBox = wait.WaitUntilDisplayed(() => driver.FindElement(ByExtensions.TextInsideDiv("Calculation Value")));
-            calculationCheckBox.Click();
-
-            var nextButton = wait.WaitUntilDisplayed(() => driver.FindElement(ByExtensions.TextInsideButton("Next")));
-            nextButton.Click();
-
-            var titleInput = wait.WaitUntilDisplayed(() => driver.FindElement(By.Id("widgetTitleInput")));
-            titleInput.SendKeys(widgetName);
-
-            nextButton.Click();
-
-            var selectPlant = wait.WaitUntilEnabled(() => driver.FindElement(By.XPath("//label[text()='Plant']/following-sibling::select")));
-            var option = wait.WaitUntilEnabled(() => driver.FindElement(By.XPath("(//label[text()='Plant']/following-sibling::select/option)[1]")));
-           
-            var selectElement = new SelectElement(selectPlant);
-
-            selectElement.SelectByIndex(0);
-
-            var friendlyNameInput = wait.WaitUntilEnabled(() => driver.FindElement(By.XPath("(//input[@id[starts-with(.,'friendlyNameInput')]])[1]")));
-            friendlyNameInput.Click();
-            friendlyNameInput.Clear();
-            friendlyNameInput.SendKeys(friendlyName);
-
-            nextButton.Click();
-            var doneButton = wait.WaitUntilDisplayed(() => driver.FindElement(ByExtensions.TextInsideButton("Done")));
-            doneButton.Click();
-
-            
+            return new Dashboard(driver, wait);
         }
 
         public void ExpandSidenav()
