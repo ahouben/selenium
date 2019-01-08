@@ -4,7 +4,8 @@
     <Parameter name="url" value="" />
     <Parameter name="username" value="" />
     <Parameter name="password" value="" />
-    <Parameter name="browser" value="chrome" />
+    <!-- choose 'chrome' or 'firefox' -->
+    <Parameter name="browser" value="firefox" />
     <Parameter name="incognito" value="true" />
     <Parameter name="headless" value="true" /> 
   </TestRunParameters>

@@ -52,7 +52,7 @@ namespace Buhler.IoT.e2e
 
                 driver = new FirefoxDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), firefoxOptions);
             }
-                                   
+
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
 

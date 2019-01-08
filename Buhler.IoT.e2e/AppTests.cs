@@ -5,8 +5,9 @@ using System;
 
 namespace Buhler.IoT.e2e
 {
+    [TestFixture]
     public class AppTests : BaseTests
-    {     
+    {       
         [Test]
         public void LoginLogout()
         {
@@ -22,8 +23,8 @@ namespace Buhler.IoT.e2e
 
             appPage.Logout();
 
-            var ele = wait.WaitUntilDisplayed(() => driver.FindElement(By.XPath("//div[contains(text(), 'Pick an account')]")));
-            Console.WriteLine(driver.Url);
+            // Wait until we're back on the Microsoft login-page.
+            wait.WaitUntilDisplayed(() => driver.FindElement(By.XPath("//div[contains(text(), 'Pick an account')]")));
 
             // Check whether logout worked by looking at the url.
             Assert.IsTrue(driver.Url.Contains("https://login.microsoftonline.com/"));

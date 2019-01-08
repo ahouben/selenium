@@ -6,9 +6,10 @@ using System.Threading;
 
 namespace Buhler.IoT.e2e
 {
+    [TestFixture]
     public class WidgetTests : BaseTests
     {
-        [Test]
+        [Test]      
         public void CheckFriendlyName()
         {
             const string FRIENDLY_NAME = "My friendly name";
