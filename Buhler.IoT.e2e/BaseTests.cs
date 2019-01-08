@@ -18,8 +18,17 @@ namespace Buhler.IoT.e2e
         public void Setup()
         {
             ChromeOptions options = new ChromeOptions();
-            options.AddArgument("incognito");
-            options.AddArgument("headless");
+
+            if (bool.TryParse(TestContext.Parameters["incognito"], out bool incognito) && incognito)
+            {
+                options.AddArgument("incognito");
+            }
+            
+            if(bool.TryParse(TestContext.Parameters["headless"], out bool headless) && headless)
+            {
+                options.AddArgument("headless");
+            }
+            
             driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
@@ -36,6 +45,7 @@ namespace Buhler.IoT.e2e
         [TearDown]
         public void TearDown()
         {
+            // Close browsers after tests have run.
             driver.Close();
         }
     }

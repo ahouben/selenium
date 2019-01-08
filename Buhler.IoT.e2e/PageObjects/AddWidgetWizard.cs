@@ -1,9 +1,6 @@
 ﻿using Buhler.IoT.e2e.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Buhler.IoT.e2e.PageObjects
 {
@@ -26,6 +23,7 @@ namespace Buhler.IoT.e2e.PageObjects
                 return WaitUntilDisplayed(ElementFinder.ByTextInsideButton("Next"));
             }
         }
+
         public IWebElement DoneButton
         {
             get

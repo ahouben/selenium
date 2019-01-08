@@ -6,8 +6,11 @@ namespace Buhler.IoT.e2e.PageObjects
 {
     public class Dashboard : BasePageObject
     {
-        public Dashboard(IWebDriver driver, WebDriverWait wait) : base(driver, wait)
+        public string Name { get; private set; }
+
+        public Dashboard(string name, IWebDriver driver, WebDriverWait wait) : base(driver, wait)
         {
+            Name = name;
         }
 
         public IWebElement EditDashboardButton

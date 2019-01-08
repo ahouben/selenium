@@ -1,10 +1,7 @@
 ﻿using Buhler.IoT.e2e.Helpers;
 using Buhler.IoT.e2e.PageObjects;
 using NUnit.Framework;
-using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace Buhler.IoT.e2e
@@ -14,21 +11,20 @@ namespace Buhler.IoT.e2e
         [Test]
         public void CheckFriendlyName()
         {
-            const string DASHBOARD_NAME = "My Dashboard";
-            const string WIDGET_NAME = "My Widget";
             const string FRIENDLY_NAME = "My friendly name";
 
             Login();
 
             AppPage appPage = new AppPage(driver, wait);
-            appPage.ExpandSidenav();
 
-            Dashboard dashboard = appPage.CreateDashboard(DASHBOARD_NAME);
+            string dashboardName = "My Dashboard " + DateTime.Now.ToString("yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
+            Dashboard dashboard = appPage.CreateDashboard(dashboardName);
+
             AddWidgetWizard addWidgetWizard = dashboard.OpenAddWidgetWizard();
 
             addWidgetWizard.SelectWidgetType("Calculation Value");
             addWidgetWizard.NextButton.Click();
-            addWidgetWizard.TitleInput.SendKeys(WIDGET_NAME);
+            addWidgetWizard.TitleInput.SendKeys("My Widget");
             addWidgetWizard.NextButton.Click();
             addWidgetWizard.FriendlyNameInput.Click();
             addWidgetWizard.FriendlyNameInput.Clear();
@@ -38,7 +34,13 @@ namespace Buhler.IoT.e2e
 
             var widgetTitle = wait.WaitUntilDisplayed(() => driver.FindElement(ElementFinder.ByTitleOfDiv(FRIENDLY_NAME)));
 
+            // Check whether the friendly name has been set correctly.
             Assert.AreEqual(widgetTitle.Text, FRIENDLY_NAME);
+
+            appPage.DeleteDashboard(dashboard.Name);
+            var hasDashboard = appPage.HasDashboard(dashboard.Name);
+
+            Assert.IsFalse(hasDashboard);
         }
     }
 }

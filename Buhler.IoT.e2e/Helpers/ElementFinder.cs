@@ -24,16 +24,29 @@ namespace Buhler.IoT.e2e.Helpers
             return ByTitleOfType("a", text);
         }
 
-        public static By ByTitleOfType(string type, string text)
+        private static By ByTitleOfType(string type, string text)
         {
-            string xPath = "//" + type + "[@title='" + text + "']";
-            return By.XPath(xPath);
+            return By.XPath(XPathHelper.ByTitleOfType(type, text));
         }
 
-        public static By ByTextInsideType(string type, string text)
+        private static By ByTextInsideType(string type, string text)
+        {            
+            return By.XPath(XPathHelper.ByTextInsideType(type, text));
+        }
+
+        private class XPathHelper
         {
-            string xPath = "//" + type + "[contains(text(),'" + text + "')]";
-            return By.XPath(xPath);
+            public static string ByTextInsideType(string type, string text)
+            {
+                string xPath = "//" + type + "[contains(text(),'" + text + "')]";
+                return xPath;
+            }
+
+            public static string ByTitleOfType(string type, string text)
+            {
+                string xPath = "//" + type + "[@title='" + text + "']";
+                return xPath;
+            }
         }
     }
 }

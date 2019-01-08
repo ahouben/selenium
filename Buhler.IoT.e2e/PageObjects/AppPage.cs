@@ -1,7 +1,9 @@
 ﻿using Buhler.IoT.e2e.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace Buhler.IoT.e2e.PageObjects
 {
@@ -50,10 +52,18 @@ namespace Buhler.IoT.e2e.PageObjects
             logout.Click();
         }
 
+        public IWebElement DashboardButton
+        {
+            get
+            {
+                return WaitUntilDisplayed(ElementFinder.ByTextInsideDiv("Dashboard"));
+            }
+        }
+
         public Dashboard CreateDashboard(string name)
         {
-            var dashboardbutton = WaitUntilDisplayed(ElementFinder.ByTextInsideDiv("Dashboard"));
-            dashboardbutton.Click();
+            ExpandSidenav();
+            DashboardButton.Click();
 
             var addNewPanelButton = WaitUntilDisplayed(By.Id("addNewPanelButton"));
             addNewPanelButton.Click();
@@ -67,7 +77,31 @@ namespace Buhler.IoT.e2e.PageObjects
 
             wait.WaitForModal();
 
-            return new Dashboard(driver, wait);
+            return new Dashboard(name, driver, wait);
+        }
+
+        public void DeleteDashboard(string name)
+        {
+            ExpandSidenav();
+            DashboardButton.Click();
+
+            var deleteButton = WaitUntilDisplayed(By.XPath("//div[contains(text(), '" + name + "')]/following-sibling::div[contains(@class, 'submenu-button-group')]"));
+            deleteButton.Click();
+            var okButton = WaitUntilDisplayed(By.XPath("//confirmation-dialog//button[contains(text(), 'Ok')]"));
+            okButton.Click();
+
+            wait.WaitForModal();
+        }
+
+        public bool HasDashboard(string name)
+        {
+            ExpandSidenav();
+            DashboardButton.Click();
+
+            var dashboardList = WaitUntilDisplayed(By.XPath("//sidenav-submenu-panels/div[@class='submenu-header']/following-sibling::ul"));            
+            var elements = dashboardList.FindElements(By.XPath("//div[contains(text(), '" + name + "')]"));
+
+            return elements.Count > 0;
         }
 
         public void ExpandSidenav()

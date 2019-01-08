@@ -10,52 +10,27 @@ namespace Buhler.IoT.e2e
     {
         public static IWebElement WaitUntilDisplayed(this WebDriverWait webDriverWait, Func<IWebElement> getWebElement)
         {
-            IWebElement webElement = null;
-
-            webDriverWait.Until(d =>
-            {
-                try
-                {
-                    webElement = getWebElement();
-                    return webElement.Displayed;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    return false;
-                }
-                catch (NoSuchElementException)
-                {
-                    return false;
-                }
-            });
-
-            return webElement;
+            return WaitUntil(webDriverWait, getWebElement, f => f.Displayed);
         }
 
         public static IWebElement WaitUntilEnabled(this WebDriverWait webDriverWait, Func<IWebElement> getWebElement)
         {
-            IWebElement webElement = null;
-
-            webDriverWait.Until(d =>
-            {
-                try
-                {
-                    webElement = getWebElement();
-                    return webElement.Displayed && webElement.Enabled;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    return false;
-                }
-                catch (NoSuchElementException)
-                {
-                    return false;
-                }
-            });
-
-            return webElement;
+            return WaitUntil(webDriverWait, getWebElement, f => f.Enabled);
         }
 
+        public static ReadOnlyCollection<IWebElement> WaitUntilFirstDisplayed(this WebDriverWait webDriverWait, Func<ReadOnlyCollection<IWebElement>> getWebElements)
+        {
+            return WaitUntil(webDriverWait, getWebElements, webElements =>
+            {
+                if (!webElements.Any())
+                {
+                    return false;
+                }
+
+                return webElements.First().Displayed;
+            });
+        }
+        
         public static void WaitForModal(this WebDriverWait webDriverWait)
         {
             webDriverWait.Until(d =>
@@ -64,26 +39,21 @@ namespace Buhler.IoT.e2e
                 {
                     return true;
                 }
+
                 return false;
             });
         }
 
-        public static ReadOnlyCollection<IWebElement> WaitUntilFirstDisplayed(this WebDriverWait webDriverWait, Func<ReadOnlyCollection<IWebElement>> getWebElements)
+        private static T WaitUntil<T>(this WebDriverWait webDriverWait, Func<T> get, Predicate<T> condition)
         {
-            ReadOnlyCollection<IWebElement> webElements = null;
+            T result = default(T);
 
-            webDriverWait.Until(condition =>
+            webDriverWait.Until(driver =>
             {
                 try
                 {
-                    webElements = getWebElements();
-
-                    if(!webElements.Any())
-                    {
-                        return false;
-                    }
-
-                    return webElements.First().Displayed;
+                    result = get();
+                    return condition(result);
                 }
                 catch (StaleElementReferenceException)
                 {
@@ -95,7 +65,8 @@ namespace Buhler.IoT.e2e
                 }
             });
 
-            return webElements;
+            return result;
         }
+
     }
 }
