@@ -1,5 +1,9 @@
 # Selenium Tests for Bühler Insights
 
+## Prerequisites
+- .NET Core 2.1+ installed
+- Chrome / Firefox Browser installed
+
 ## How to start with Visual Studio 2017+
 
 1. Clone git repository
