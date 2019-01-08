@@ -4,7 +4,8 @@
     <Parameter name="url" value="" />
     <Parameter name="username" value="" />
     <Parameter name="password" value="" />
-    <Parameter name="incognito" value="True" />
-    <Parameter name="headless" value="True" />    
+    <Parameter name="browser" value="chrome" />
+    <Parameter name="incognito" value="true" />
+    <Parameter name="headless" value="true" /> 
   </TestRunParameters>
 </RunSettings>

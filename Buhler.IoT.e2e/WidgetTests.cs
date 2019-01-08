@@ -40,6 +40,7 @@ namespace Buhler.IoT.e2e
             appPage.DeleteDashboard(dashboard.Name);
             var hasDashboard = appPage.HasDashboard(dashboard.Name);
 
+            // Check whether dashboard has been deleted.
             Assert.IsFalse(hasDashboard);
         }
     }

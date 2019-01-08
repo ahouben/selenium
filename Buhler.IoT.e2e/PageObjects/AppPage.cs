@@ -85,7 +85,7 @@ namespace Buhler.IoT.e2e.PageObjects
             ExpandSidenav();
             DashboardButton.Click();
 
-            var deleteButton = WaitUntilDisplayed(By.XPath("//div[contains(text(), '" + name + "')]/following-sibling::div[contains(@class, 'submenu-button-group')]"));
+            var deleteButton = WaitUntilDisplayed(By.XPath("//div[contains(text(), '" + name + "')]/following-sibling::div[contains(@class, 'submenu-button-group')]//div[@class='delete-panel-button']"));
             deleteButton.Click();
             var okButton = WaitUntilDisplayed(By.XPath("//confirmation-dialog//button[contains(text(), 'Ok')]"));
             okButton.Click();

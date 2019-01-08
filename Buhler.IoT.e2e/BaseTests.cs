@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
@@ -17,19 +18,41 @@ namespace Buhler.IoT.e2e
         [SetUp]
         public void Setup()
         {
-            ChromeOptions options = new ChromeOptions();
+            var browser = TestContext.Parameters["browser"].ToLower();
 
-            if (bool.TryParse(TestContext.Parameters["incognito"], out bool incognito) && incognito)
+            if (browser == "chrome")
             {
-                options.AddArgument("incognito");
+                ChromeOptions chromeOptions = new ChromeOptions();
+
+                if (bool.TryParse(TestContext.Parameters["incognito"], out bool incognito) && incognito)
+                {
+                    chromeOptions.AddArgument("incognito");
+                }
+
+                if (bool.TryParse(TestContext.Parameters["headless"], out bool headless) && headless)
+                {
+                    chromeOptions.AddArgument("headless");
+                }
+
+                driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), chromeOptions);
             }
-            
-            if(bool.TryParse(TestContext.Parameters["headless"], out bool headless) && headless)
+            else if (browser == "firefox")
             {
-                options.AddArgument("headless");
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+                if (bool.TryParse(TestContext.Parameters["incognito"], out bool incognito) && incognito)
+                {
+                    firefoxOptions.AddArgument("--private");
+                }
+
+                if (bool.TryParse(TestContext.Parameters["headless"], out bool headless) && headless)
+                {
+                    firefoxOptions.AddArgument("--headless");
+                }
+
+                driver = new FirefoxDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), firefoxOptions);
             }
-            
-            driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
+                                   
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
 
