@@ -7,6 +7,7 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace Buhler.IoT.e2e
 {
@@ -22,7 +23,7 @@ namespace Buhler.IoT.e2e
 
             if (browser == "chrome")
             {
-                ChromeOptions chromeOptions = new ChromeOptions();
+                var chromeOptions = new ChromeOptions();
 
                 if (bool.TryParse(TestContext.Parameters["incognito"], out bool incognito) && incognito)
                 {
@@ -34,11 +35,16 @@ namespace Buhler.IoT.e2e
                     chromeOptions.AddArgument("headless");
                 }
 
+                if (TestContext.Parameters.Exists("lang"))
+                {
+                    chromeOptions.AddArgument($"--lang={TestContext.Parameters["lang"]}");
+                }
+
                 driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), chromeOptions);
             }
             else if (browser == "firefox")
             {
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                var firefoxOptions = new FirefoxOptions();
 
                 if (bool.TryParse(TestContext.Parameters["incognito"], out bool incognito) && incognito)
                 {
@@ -49,6 +55,15 @@ namespace Buhler.IoT.e2e
                 {
                     firefoxOptions.AddArgument("--headless");
                 }
+
+                FirefoxProfile profile = new FirefoxProfile();
+                if (TestContext.Parameters.Exists("lang"))
+                {
+                    profile.SetPreference("intl.accept_languages", TestContext.Parameters["lang"]);
+                }
+                // firefox needs this if you set a custom profile, see https://github.com/SeleniumHQ/selenium/issues/4816
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                firefoxOptions.Profile = profile;
 
                 driver = new FirefoxDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), firefoxOptions);
             }
@@ -61,7 +76,7 @@ namespace Buhler.IoT.e2e
             string url = TestContext.Parameters["url"];
             driver.Navigate().GoToUrl(url);
 
-            LoginPage loginPage = new LoginPage(driver, wait);
+            var loginPage = new LoginPage(driver, wait);
             loginPage.Login(TestContext.Parameters["username"], TestContext.Parameters["password"]);
         }
 

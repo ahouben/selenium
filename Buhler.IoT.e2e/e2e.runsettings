@@ -7,6 +7,7 @@
     <!-- choose 'chrome' or 'firefox' -->
     <Parameter name="browser" value="chrome" />
     <Parameter name="incognito" value="true" />
-    <Parameter name="headless" value="true" /> 
+    <Parameter name="headless" value="true" />
+    <Parameter name="lang" value="en" />
   </TestRunParameters>
 </RunSettings>

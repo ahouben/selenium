@@ -11,12 +11,12 @@ namespace Buhler.IoT.e2e.PageObjects
 
         public void Login(string username, string password)
         {
-            var emailInput = wait.Until(f => f.FindElement(By.CssSelector("input[name='loginfmt']")));          
+            var emailInput = wait.Until(f => f.FindElement(By.CssSelector("input[name='loginfmt']")));
 
             emailInput.SendKeys(username);
             emailInput.SendKeys(Keys.Enter);
 
-            var passwordInput = wait.WaitUntilDisplayed(() => driver.FindElement(By.CssSelector("input[name='passwd']")));           
+            var passwordInput = wait.WaitUntilDisplayed(() => driver.FindElement(By.CssSelector("input[name='passwd']")));
 
             passwordInput.SendKeys(password);
             passwordInput.SendKeys(Keys.Enter);
